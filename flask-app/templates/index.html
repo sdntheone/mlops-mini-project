@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+</head>
+<body>
+    <h1>Sentiment Analysis</h1>
+
+    <form action="/predict" method="POST">
+        <label>Write Text:</label><br>
+        <textarea name="text" rows="10" cols="40"></textarea><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if result is not none %}
+        <h2>{{ 'Happy' if result == 1 else 'Sad' }}</h2>
+    {% endif %}
+
+</body>
+</html>

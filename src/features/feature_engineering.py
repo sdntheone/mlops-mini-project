@@ -6,6 +6,7 @@ import yaml
 from typing import Tuple
 from scipy.sparse import csr_matrix
 from src.logging.logging import get_logger
+import pickle
 
 logger = get_logger(__name__)
 
@@ -103,6 +104,12 @@ def bag_of_words(
         X_train_tfidf = vectorizer.fit_transform(X_train)
         X_test_tfidf = vectorizer.transform(X_test)
 
+        os.makedirs("models", exist_ok=True)
+        vectorizer_path = os.path.join("models", "vectorizer.pkl")
+
+        with open(vectorizer_path, "wb") as f:
+            pickle.dump(vectorizer, f)
+
         logger.debug(f"Tfidf shapes: {X_train_tfidf.shape}, {X_test_tfidf.shape}")
 
         return X_train_tfidf, X_test_tfidf
@@ -131,6 +138,8 @@ def tfidf_to_df(
 
         test_df = pd.DataFrame(X_test_tfidf.toarray())
         test_df['label'] = y_test
+
+        
 
         return train_df, test_df
 
