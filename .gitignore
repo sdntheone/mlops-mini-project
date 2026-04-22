@@ -89,3 +89,5 @@ target/
 .mypy_cache/
 myenv
 /metrics.json
+/model.pkl
+/reports

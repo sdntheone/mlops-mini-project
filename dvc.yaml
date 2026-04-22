@@ -36,12 +36,20 @@ stages:
       - model_building.solver
       - model_building.penalty
     outs:
-      - model.pkl
+      - models/model.pkl
+      - reports/model_info.json
 
   model_evaluation:
     cmd: python -m src.model.model_evaluation
     deps:
-      - model.pkl
+      - models/model.pkl
       - src/model/model_evaluation.py
     metrics:
-      - metrics.json
+      - reports/metrics.json
+
+
+  model_registration:
+    cmd: python -m src.model.register_model
+    deps:
+    - reports/model_info.json
+    -  src/model/register_model.py
