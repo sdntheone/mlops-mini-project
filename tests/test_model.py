@@ -63,12 +63,21 @@ class TestModelLoading(unittest.TestCase):
         self.assertEqual(len(prediction.shape), 1)  # Assuming a single output column for binary classification
 
     def test_model_performance(self):
-        # Extract features and labels from holdout test data
-        X_holdout = self.holdout_data.iloc[:,0:-1]
-        y_holdout = self.holdout_data.iloc[:,-1]
+        # Assuming first column is raw text
+        X_raw = self.holdout_data.iloc[:, 0]
+        y_holdout = self.holdout_data.iloc[:, -1]
 
-        # Predict using the new model
-        y_pred_new = self.new_model.predict(X_holdout)
+        # Transform text → features
+        X_transformed = self.vectorizer.transform(X_raw)
+
+        # Convert to DataFrame (MLflow expects DataFrame sometimes)
+        X_df = pd.DataFrame(
+            X_transformed.toarray(),
+            columns=[str(i) for i in range(X_transformed.shape[1])]
+        )
+
+        # Predict
+        y_pred_new = self.new_model.predict(X_df)
 
         # Calculate performance metrics for the new model
         accuracy_new = accuracy_score(y_holdout, y_pred_new)
