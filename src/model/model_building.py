@@ -27,16 +27,25 @@ with open('params.yaml', 'r') as f:
     params = yaml.safe_load(f)['model_building']
 
 
-# -----------------------------
 # MLflow setup
-# -----------------------------
-mlflow.set_tracking_uri('https://dagshub.com/sdntheone/mlops-mini-project.mlflow')
-dagshub.init(repo_owner='sdntheone', repo_name='mlops-mini-project', mlflow=True)
+# mlflow.set_tracking_uri('https://dagshub.com/sdntheone/mlops-mini-project.mlflow')
+# dagshub.init(repo_owner='sdntheone', repo_name='mlops-mini-project', mlflow=True)
+dagshub_token=os.getenv("DAGSHUB_PAT")
+if not dagshub_token:
+    raise EnvironmentError("DAGSHUB_PAT envoiroment variable is not set ")
+
+os.environ["MLFLOW_TRACKING_USERNAME"]=dagshub_token
+os.environ["MLFLOW_TRACKING_PASSWORD"]=dagshub_token
+
+dagshub_url="https://dagshub.com"
+repo_owner="sdntheone"
+repo_name="mlops-mini-project"
+
+# setup MLFlow tracking URL
+mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}/{repo_name}.mlflow')
 
 
-# -----------------------------
 # Load data
-# -----------------------------
 def load_data(train_data_path: str) -> pd.DataFrame:
     logger.info(f"Loading training data from: {train_data_path}")
     return pd.read_csv(train_data_path)

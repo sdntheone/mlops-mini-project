@@ -8,8 +8,22 @@ from src.logging.logging import get_logger
 logger = get_logger(__name__)
 
 
-mlflow.set_tracking_uri('https://dagshub.com/sdntheone/mlops-mini-project.mlflow')
-dagshub.init(repo_owner='sdntheone', repo_name='mlops-mini-project', mlflow=True)
+# mlflow.set_tracking_uri('https://dagshub.com/sdntheone/mlops-mini-project.mlflow')
+# dagshub.init(repo_owner='sdntheone', repo_name='mlops-mini-project', mlflow=True)
+
+dagshub_token=os.getenv("DAGSHUB_PAT")
+if not dagshub_token:
+    raise EnvironmentError("DAGSHUB_PAT envoiroment variable is not set ")
+
+os.environ["MLFLOW_TRACKING_USERNAME"]=dagshub_token
+os.environ["MLFLOW_TRACKING_PASSWORD"]=dagshub_token
+
+dagshub_url="https://dagshub.com"
+repo_owner="sdntheone"
+repo_name="mlops-mini-project"
+
+# setup MLFlow tracking URL
+mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}/{repo_name}.mlflow')
 
 
 def load_model_info(file_path:str) -> dict:
