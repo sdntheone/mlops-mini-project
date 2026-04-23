@@ -91,3 +91,4 @@ myenv
 /metrics.json
 /model.pkl
 /reports
+reports/
