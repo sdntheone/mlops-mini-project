@@ -23,7 +23,7 @@ repo_owner="sdntheone"
 repo_name="mlops-mini-project"
 
 # setup MLFlow tracking URL
-mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}/{repo_name}.mlflow')
+mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}.mlflow')
 
 
 def load_model_info(file_path:str) -> dict:
