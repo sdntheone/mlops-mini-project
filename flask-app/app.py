@@ -17,22 +17,30 @@ def load_mlflow_model():
     try:
         with open("reports/model_info.json", "r") as f:
             model_info = json.load(f)
+
         model_uri = model_info["model_uri"]
         print(f"[*] Attempting to fetch model from: {model_uri}")
+
         local_cache_path = os.path.join(os.getcwd(), "mlflow_model_cache")
+
         model = mlflow.pyfunc.load_model(model_uri, dst_path=local_cache_path)
+
         print("[+] Model loaded successfully from MLflow!")
         return model
-    
+
     except Exception as e:
         print(f"[!] MLflow Load Error: {e}")
         print("[!] Falling back to local pickle file if available...")
-        return pickle.load(open("models/model.pkl","rb")) if os.path.exists("models/model.pkl") else (_ for _ in ()).throw(Exception("Could not load model from MLflow OR local storage."))
+
+        if os.path.exists("models/model.pkl"):
+            return pickle.load(open("models/model.pkl", "rb"))
+        else:
+            raise Exception("Could not load model from MLflow OR local storage.")
 
 model = load_mlflow_model()
 
 try:
-    vectoriser = pickle.load(open("models/vectorizer.pkl","rb"))
+    vectoriser = pickle.load(open("models/vectorizer.pkl", "rb"))
 except FileNotFoundError:
     print("[!] Vectorizer not found at models/vectorizer.pkl")
 
@@ -43,12 +51,17 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        text = request.form.get('text','')
-        if not text: return "No text provided", 400
+        text = request.form.get('text', '')
+
+        if not text:
+            return "No text provided", 400
+
         processed_text = normalize_text(text)
         features = vectoriser.transform([processed_text])
         result = model.predict(features)
+
         return render_template('index.html', result=result[0])
+
     except Exception as e:
         return f"Prediction Error: {str(e)}", 500
 
