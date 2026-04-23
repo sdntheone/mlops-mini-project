@@ -64,7 +64,7 @@ class TestModelLoading(unittest.TestCase):
 
     def test_model_performance(self):
         # Assuming first column is raw text
-        X_raw = self.holdout_data['content']
+        X_raw = self.holdout_data['content'].fillna("").astype(str)
         y_holdout = self.holdout_data['sentiment']
 
 
