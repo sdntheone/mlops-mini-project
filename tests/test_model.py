@@ -35,7 +35,7 @@ class TestModelLoading(unittest.TestCase):
         cls.vectorizer = pickle.load(open('models/vectorizer.pkl', 'rb'))
 
         # Load holdout test data
-        cls.holdout_data = pd.read_csv('data/features/test_tfidf.csv')
+        cls.holdout_data = pd.read_csv('data/processed/test_processed.csv')
 
     @staticmethod
     def get_latest_model_version(model_name, stage="Staging"):
@@ -64,8 +64,9 @@ class TestModelLoading(unittest.TestCase):
 
     def test_model_performance(self):
         # Assuming first column is raw text
-        X_raw = self.holdout_data.iloc[:, 0]
-        y_holdout = self.holdout_data.iloc[:, -1]
+        X_raw = self.holdout_data['content']
+        y_holdout = self.holdout_data['sentiment']
+
 
         # Transform text → features
         X_transformed = self.vectorizer.transform(X_raw)
