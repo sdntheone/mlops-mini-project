@@ -4,7 +4,7 @@ import pickle
 import mlflow
 import dagshub
 from flask import Flask, render_template, request
-from preprocessing_utility import normalize_text
+from flask_app.preprocessing_utility import normalize_text
 import pandas as pd
 from dotenv import load_dotenv
 load_dotenv()
