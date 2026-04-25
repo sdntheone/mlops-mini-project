@@ -2,7 +2,7 @@ data_ingestion:
   test_size: 0.30
 
 feature_engineering:
-  max_features: 4500
+  max_features: 5000
 
 model_building:
   C: 1
